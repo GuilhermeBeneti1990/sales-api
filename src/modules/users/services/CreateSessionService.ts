@@ -25,7 +25,7 @@ class CreateSessionService {
 
     if(!user) throw new AppError('Incorrect credentials!', 401);
 
-    const passwordMatches = compare(password, user.password);
+    const passwordMatches = await compare(password, user.password);
 
     if(!passwordMatches) throw new AppError('Password does not matches!', 401);
 
