@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import CreateSessionService from "../services/CreateSessionService";
+import { instanceToInstance } from "class-transformer";
 
 export default class SessionController {
 
@@ -15,7 +16,7 @@ export default class SessionController {
 
     return res.json({
       status: 200,
-      body: user
+      body: instanceToInstance(user)
     });
   }
 

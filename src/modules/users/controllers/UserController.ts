@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ListUsersService from "../services/ListUserService";
 import CreateUserService from "../services/CreateUserService";
+import { instanceToInstance } from "class-transformer";
 
 export default class UserController {
 
@@ -11,7 +12,7 @@ export default class UserController {
 
     return res.json({
       status: 200,
-      body: users
+      body: instanceToInstance(users)
     });
   }
 
@@ -28,7 +29,7 @@ export default class UserController {
 
     return res.json({
       status: 201,
-      body: user
+      body: instanceToInstance(user)
     });
   }
 

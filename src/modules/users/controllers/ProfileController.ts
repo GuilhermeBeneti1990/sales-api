@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ShowUserProfileService from "../services/ShowUserProfileService";
 import UpdateUserProfileService from "../services/UpdateUserProfileService";
+import { instanceToInstance } from "class-transformer";
 
 export default class ProfileController {
 
@@ -12,7 +13,7 @@ export default class ProfileController {
 
     return res.json({
       status: 200,
-      body: user
+      body: instanceToInstance(user)
     });
   }
 
@@ -32,7 +33,7 @@ export default class ProfileController {
 
     return res.json({
       status: 200,
-      body: user
+      body: instanceToInstance(user)
     });
   }
 
