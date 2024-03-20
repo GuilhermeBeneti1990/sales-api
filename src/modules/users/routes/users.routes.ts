@@ -12,8 +12,6 @@ const userAvatarController = new UserAvatarController();
 
 const upload = multer(uploadConfig);
 
-usersRouter.use(isAuthenticated);
-
 usersRouter.get('/', isAuthenticated, userController.list);
 
 usersRouter.post('/', celebrate({
