@@ -2,6 +2,7 @@ import { getCustomRepository } from "typeorm";
 import { ProductRepository } from "../typeorm/repositories/ProductRepository";
 import AppError from "@shared/errors/AppError";
 import Product from "../typeorm/entities/Product";
+import RedisCache from "@shared/cache/RedisCache";
 
 interface IRequest {
   name: string;
@@ -19,12 +20,16 @@ class CreateProductService {
 
     if(productExists) throw new AppError('There is already a product with this name!');
 
+    const redisCache = new RedisCache();
+
     const product = repository.create({
       name,
       description,
       price,
       quantity
     });
+
+    await redisCache.invalidate('[salesAPI]-PRODUCT_LIST');
 
     await repository.save(product);
 

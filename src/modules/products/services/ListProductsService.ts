@@ -1,26 +1,24 @@
 import { getCustomRepository } from "typeorm";
 import { ProductRepository } from "../typeorm/repositories/ProductRepository";
 import Product from "../typeorm/entities/Product";
-
-interface IPaginateProducts {
-  from: number;
-  to: number;
-  per_page: number;
-  total: number;
-  current_page: number;
-  prev_page: number | null;
-  next_page: number | null;
-  data: Product[]
-}
+import RedisCache from "@shared/cache/RedisCache";
 
 class ListProductsService {
   
-  public async execute(): Promise<IPaginateProducts> {
+  public async execute(): Promise<Product[]> {
     const repository = getCustomRepository(ProductRepository);
-    
-    const products = await repository.createQueryBuilder().paginate();
 
-    return products as IPaginateProducts;
+    const redisCache = new RedisCache();
+
+    let products = await redisCache.recover<Product[]>('[salesAPI]-PRODUCT_LIST');
+    
+    if(!products) {
+      products = await repository.find();
+
+      await redisCache.save('[salesAPI]-PRODUCT_LIST', products);
+    }
+
+    return products;
   }
 
 }
